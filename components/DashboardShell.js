@@ -12,6 +12,7 @@ import {
 
 import { Logo } from '@styles/icons';
 import { useAuth } from '@lib/auth';
+import AddSiteModal from './AddSiteModal';
 
 const DashboardShell = ({ children }) => {
   const { user, signout } = useAuth();
@@ -35,10 +36,13 @@ const DashboardShell = ({ children }) => {
             <Link>Avis</Link>
           </Flex>
           <Flex justifyContent="center" alignItems="center">
-            <Button variant="ghost" mr={2} onClick={() => signout()}>
-              Se déconnecter
-            </Button>
-            <Avatar size="sm" src={user.photoUrl} />
+            {user && (
+              <Button variant="ghost" mr={2} onClick={() => signout()}>
+                Se déconnecter
+              </Button>
+            )}
+            {/* error when loading in no user yet set. so put ? as user? */}
+            <Avatar size="sm" src={user?.photoUrl} />
           </Flex>
         </Flex>
       </Box>
@@ -52,18 +56,7 @@ const DashboardShell = ({ children }) => {
         </Breadcrumb>
         <Flex justifyContent="space-between">
           <Heading mb={8}>Mes sites</Heading>
-          <Button
-            backgroundColor="gray.900"
-            color="white"
-            fontWeight="medium"
-            _hover={{ bg: 'gray.700' }}
-            _active={{
-              bg: 'gray.800',
-              transform: 'scale(0.95)'
-            }}
-          >
-            + Ajouter Site
-          </Button>
+          <AddSiteModal>+ Ajouter Site</AddSiteModal>
         </Flex>
         {children}
       </Flex>

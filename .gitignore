@@ -32,3 +32,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# firebase
+feedbacker-demo-firebase-adminsdk.json

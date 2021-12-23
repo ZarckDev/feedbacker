@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { mutate } from 'swr'; // get instant data on update
 import {
   Button,
   Modal,
@@ -12,26 +13,65 @@ import {
   FormControl,
   FormLabel,
   Input,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react';
 
 import { createSite } from '@lib/db-firestore';
+import { useAuth } from '@lib/auth';
 
-const AddSiteModal = () => {
+const AddSiteModal = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
-
+  const toast = useToast();
+  const auth = useAuth();
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm();
-  const onCreateSite = (data) => createSite(data);
+
+  const onCreateSite = ({ name, link }) => {
+    const newSite = {
+      authorId: auth.user.uid,
+      createdAt: new Date().toISOString(),
+      name,
+      link
+    };
+    createSite(newSite);
+    toast({
+      title: 'Succès !',
+      description: 'Nous avons ajouter votre site.',
+      status: 'success',
+      duration: 5000,
+      isClosable: true
+    });
+    mutate(
+      '/api/sites',
+      async (data) => {
+        return { sites: [...data.sites, newSite] }; // api returns "sites", so get previous and add new site locally
+      },
+      false
+    ); // update local data immediately and revalidate (refetch) -- acting on the cache
+    reset();
+    onClose();
+  };
 
   return (
     <>
-      <Button fontWeight="medium" onClick={onOpen}>
-        Ajouter votre premier site
+      <Button
+        backgroundColor="gray.900"
+        color="white"
+        fontWeight="medium"
+        _hover={{ bg: 'gray.700' }}
+        _active={{
+          bg: 'gray.800',
+          transform: 'scale(0.95)'
+        }}
+        onClick={onOpen}
+      >
+        {children}
       </Button>
 
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
