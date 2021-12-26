@@ -13,7 +13,8 @@ export async function getStaticProps(context) {
   const { feedback } = await getAllFeedback(siteId);
 
   return {
-    props: { initialFeedback: feedback }
+    props: { initialFeedback: feedback },
+    revalidate: 1
   };
 }
 

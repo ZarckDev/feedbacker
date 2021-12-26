@@ -48,7 +48,7 @@ const AddSiteModal = ({ children }) => {
       isClosable: true
     });
     mutate(
-      '/api/sites',
+      ['/api/sites', auth.user.token],
       async (data) => {
         return { sites: [...data.sites, newSite] }; // api returns "sites", so get previous and add new site locally
       },

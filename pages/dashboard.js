@@ -7,10 +7,10 @@ import SiteTable from '@components/SiteTable';
 import fetcher from '@utils/fetcher';
 
 export default function Dashboard() {
-  const auth = useAuth();
+  const { user } = useAuth();
 
   // fetch data on the client side ==> use SWR !!!
-  const { data } = useSWR('/api/sites', fetcher);
+  const { data } = useSWR(user ? ['/api/sites', user.token] : null, fetcher);
 
   if (!data) {
     return (
