@@ -14,6 +14,7 @@ const customTheme = extendTheme({
       },
       'html, body': {
         color: 'gray.900',
+        backgroundColor: 'gray.100',
         lineHeight: 'tall'
       },
       html: {

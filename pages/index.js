@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import { Button, Container, Flex, Text } from '@chakra-ui/react';
+import { Button, Container, Flex, Text, Stack } from '@chakra-ui/react';
 
 import { useAuth } from '@lib/auth';
-import { Logo } from '@styles/icons';
+import { Logo, GitHubIcon, GoogleIcon } from '@styles/icons';
 
 export default function Home() {
   const auth = useAuth();
@@ -29,8 +29,8 @@ export default function Home() {
         justify="center"
         h="100vh"
       >
-        <Logo color="green.400" boxSize={20} />
-        <Text mb={4}>
+        <Logo color="green.400" boxSize={24} />
+        <Text mb={8} fontSize="lg">
           <Text as="span" fontWeight="bold" display="inline">
             Feedbacker
           </Text>
@@ -38,13 +38,56 @@ export default function Home() {
         </Text>
 
         {auth.user ? (
-          <Button as="a" href="/dashboard">
+          <Button
+            as="a"
+            href="/dashboard"
+            size="md"
+            backgroundColor="white"
+            color="gray.900"
+            variant="outline"
+            _hover={{ bg: 'gray.100' }}
+            _active={{
+              bg: 'gray.100',
+              transform: 'scale(0.95)'
+            }}
+          >
             Voir mon compte
           </Button>
         ) : (
-          <Button mt={4} size="sm" onClick={(e) => auth.signinWithGitHub()}>
-            Se connecter
-          </Button>
+          <Stack>
+            <Button
+              leftIcon={<GitHubIcon h={6} w={6} mr={1} />}
+              mt={4}
+              size="md"
+              backgroundColor="gray.900"
+              color="white"
+              fontWeight="medium"
+              _hover={{ bg: 'gray.700' }}
+              _active={{
+                bg: 'gray.800',
+                transform: 'scale(0.95)'
+              }}
+              onClick={(e) => auth.signinWithGitHub()}
+            >
+              Se connecter avec GitHub
+            </Button>
+            <Button
+              leftIcon={<GoogleIcon h={6} w={6} mr={1} />}
+              mt={4}
+              size="md"
+              backgroundColor="white"
+              color="gray.900"
+              variant="outline"
+              _hover={{ bg: 'gray.100' }}
+              _active={{
+                bg: 'gray.100',
+                transform: 'scale(0.95)'
+              }}
+              onClick={(e) => auth.signinWithGoogle()}
+            >
+              Se connecter avec Google
+            </Button>
+          </Stack>
         )}
       </Flex>
     </Container>
